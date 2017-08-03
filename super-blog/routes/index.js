@@ -8,12 +8,15 @@ router.get('/', function(req, res, next) {
 router.get('/login', function (req, res, next) {
   client = usr.connect();
   result = null;
-  console.log(req.body)
-  usr.selectFun(client, req.body.username, function (result) {
+  var data=JSON.parse(req.query.data)
+  usr.selectFun(client, data.username, function (result) {
     if (result[0] === undefined) {
-      res.send('没有该用户');
+      res.send('用户不存在');
+      usr.insertFun(client,"小恶魔",data.password,data.phoneNum,function(result){
+        //res.send('创建用户成功',result);
+      })
     } else {
-      if (result[0].password === req.body.password) {
+      if (result[0].password === data.password) {
         console.log(req.body);
         //todo something
         res.json({"errorCode": 0,"errorMessage": 'save'});
