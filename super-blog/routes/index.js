@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 router.get('/login', function (req, res, next) {
   client = usr.connect();
   result = null;
+  console.log(req.body)
   usr.selectFun(client, req.body.username, function (result) {
     if (result[0] === undefined) {
       res.send('没有该用户');
@@ -25,16 +26,14 @@ router.get('/login', function (req, res, next) {
 router.get('/sign', function (req, res, next) {
   client = usr.connect();
   result = null;
-  console.log(req);
   usr.selectFun(client,"ddd", function (result) {
-    console.log(result);
     if (result[0] === undefined) {
       usr.insertFun(client,"ddd",123456, function (result){
         console.log(result);
         res.json({"Code":200,"Message": 'success'});
       })
     } else {
-      res.json({"Code":201,"Message": 'success'});
+      res.json({"Code":202,"Message": 'success'});
     }
   });
 });
