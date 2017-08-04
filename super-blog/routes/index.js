@@ -9,17 +9,16 @@ router.get('/login', function (req, res, next) {
   client = usr.connect();
   result = null;
   var data=JSON.parse(req.query.data)
-  usr.selectFun(client, data.username, function (result) {
+  usr.selectFun(client, data.phoneNum, function (result) {
     if (result[0] === undefined) {
-      res.send('用户不存在');
-      usr.insertFun(client,"小恶魔",data.password,data.phoneNum,function(result){
-        //res.send('创建用户成功',result);
+      //res.send('用户不存在');
+      usr.insertFun(client,data.phoneNum,data.password,data.phoneNum,function(result){
+        res.send('创建用户成功');
       })
     } else {
       if (result[0].password === data.password) {
-        console.log(req.body);
         //todo something
-        res.json({"errorCode": 0,"errorMessage": 'save'});
+        res.json({"errorCode": 0,"errorMessage": '手机号已经注册！'});
       } else {
         res.redirect('/login');
       }
