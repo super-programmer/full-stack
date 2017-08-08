@@ -5,7 +5,7 @@ var usr= require('dao/dbConnect');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express3' });
 });
-router.get('/login', function (req, res, next) {
+router.get('/sign', function (req, res, next) {
   client = usr.connect();
   result = null;
   var data=JSON.parse(req.query.data)
@@ -16,26 +16,23 @@ router.get('/login', function (req, res, next) {
         res.send('创建用户成功');
       })
     } else {
-      if (result[0].password === data.password) {
-        //todo something
-        res.json({"errorCode": 0,"errorMessage": '手机号已经注册！'});
-      } else {
-        res.redirect('/login');
-      }
+        res.json({"errorCode": 201,"errorMessage": '手机号已经注册！'});
     }
   });
 });
-router.get('/sign', function (req, res, next) {
+router.get('/login', function (req, res, next) {
   client = usr.connect();
   result = null;
-  usr.selectFun(client,"ddd", function (result) {
+  var data=JSON.parse(req.query.data)
+  usr.selectFun(client, data.phoneNum, function (result) {
     if (result[0] === undefined) {
-      usr.insertFun(client,"ddd",123456, function (result){
-        console.log(result);
-        res.json({"Code":200,"Message": 'success'});
-      })
+      res.json({"errorCode": 203,"errorMessage": '未注册！'});
     } else {
-      res.json({"Code":202,"Message": 'success'});
+      if (result[0].password === data.password) {
+        res.json({"errorCode": 200,"errorMessage": '登录成功！'});
+      } else {
+        res.json({"errorCode": 400,"errorMessage": '密码错误！'});
+      }
     }
   });
 });
